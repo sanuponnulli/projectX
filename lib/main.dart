@@ -1,4 +1,8 @@
+import 'package:asw/apiservice.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/user_bloc_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,13 +13,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
+    return BlocProvider(
+      create: (context) => UserBlocBloc(),
+      child: MaterialApp(
+        theme: ThemeData(
 
-          //scaffoldBackgroundColor: Color.fromARGB(153, 145, 145, 145),
-          ),
-      debugShowCheckedModeBanner: false,
-      home: const Home(),
+            //scaffoldBackgroundColor: Color.fromARGB(153, 145, 145, 145),
+            ),
+        debugShowCheckedModeBanner: false,
+        home: const Home(),
+      ),
     );
   }
 }
@@ -41,12 +48,16 @@ class _HomeState extends State<Home> {
   void onlisten2() {
     //print(_scrollController1.position);
   }
+  // void data() async {
+  //   getdata();
+  // }
 
   @override
   void initState() {
     // TODO: implement initState
     _scrollController.addListener(onListen);
     _scrollController1.addListener(onlisten2);
+    //data();
     super.initState();
   }
 
@@ -60,6 +71,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<UserBlocBloc>(context).add(Intialize());
+    });
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
@@ -100,7 +114,9 @@ class _HomeState extends State<Home> {
                               BorderRadius.all(Radius.circular(22.0))),
                       elevation: 0,
                       backgroundColor: Color.fromARGB(255, 222, 242, 71),
-                      onPressed: () {},
+                      onPressed: () {
+                        // data();
+                      },
                     ),
                   ))
             ]),
@@ -283,37 +299,46 @@ class _HomeState extends State<Home> {
                                   ),
                                   SizedBox(height: 15),
                                   Expanded(
-                                    child: ListView.separated(
-                                        itemBuilder: ((context, index) {
-                                          return ListTile(
-                                            leading: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      8.0), //or 15.0
-                                              child: Container(
-                                                height: 45.0,
-                                                width: 40.0,
-                                                color: Color(0xffFF0E58),
-                                                child: Image.network(
-                                                    fit: BoxFit.fill,
-                                                    "https://media.wired.com/photos/592676467034dc5f91beb80e/master/pass/MarkZuckerberg.jpg"),
-                                              ),
-                                            ),
-                                            tileColor: Colors.white,
-                                            trailing: Text("\$ 100",
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.green)),
-                                            title: Text("Name"),
-                                            subtitle: Text(
-                                              "Untill 20/10/22",
-                                            ),
-                                          );
-                                        }),
-                                        separatorBuilder: ((context, index) =>
-                                            const Divider()),
-                                        itemCount: 27),
+                                    child: BlocBuilder<UserBlocBloc,
+                                        UserBlocState>(
+                                      builder: (context, state) {
+                                        return ListView.separated(
+                                            itemBuilder: ((context, index) {
+                                              //print(state.user);
+                                              return ListTile(
+                                                leading: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0), //or 15.0
+                                                  child: Container(
+                                                    height: 45.0,
+                                                    width: 40.0,
+                                                    color: Color(0xffFF0E58),
+                                                    child: Image.network(
+                                                        //fit: BoxFit.fill,
+                                                        state.user[index][1]),
+                                                  ),
+                                                ),
+                                                tileColor: Colors.white,
+                                                trailing: Text("\$ 100",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.green)),
+                                                title:
+                                                    Text(state.user[index][0]),
+                                                subtitle: Text(
+                                                  "Untill 20/10/22",
+                                                ),
+                                              );
+                                            }),
+                                            separatorBuilder:
+                                                ((context, index) =>
+                                                    const Divider()),
+                                            itemCount: state.user.length);
+                                      },
+                                    ),
                                   ),
                                 ],
                               ),
