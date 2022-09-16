@@ -9,7 +9,7 @@ class UserBlocBloc extends Bloc<UserBlocEvent, UserBlocState> {
   UserBlocBloc() : super(UserBlocInitial()) {
     on<Intialize>((event, emit) async {
       final data = await getdata();
-      return emit(UserBlocState(user: data));
+      return emit(UserBlocState(user: data, isEnd: false, isLoading: false));
       // TODO: implement event handler
     });
   }

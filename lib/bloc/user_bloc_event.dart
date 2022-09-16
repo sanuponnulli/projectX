@@ -4,3 +4,5 @@ part of 'user_bloc_bloc.dart';
 abstract class UserBlocEvent {}
 
 class Intialize extends UserBlocEvent {}
+
+class Loadmore extends UserBlocEvent {}

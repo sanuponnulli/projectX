@@ -1,4 +1,3 @@
-import 'package:asw/apiservice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,8 +34,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  ScrollController _scrollController = ScrollController();
-  ScrollController _scrollController1 = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController1 = ScrollController();
   double _opacity = 0;
   void onListen() {
     setState(() {
@@ -78,7 +77,7 @@ class _HomeState extends State<Home> {
         bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             selectedItemColor: Colors.black,
-            unselectedItemColor: Color.fromARGB(255, 176, 176, 176),
+            unselectedItemColor: const Color.fromARGB(255, 176, 176, 176),
             currentIndex: 0,
             items: [
               BottomNavigationBarItem(
@@ -109,18 +108,18 @@ class _HomeState extends State<Home> {
                         "lib/assets/plus_2.png",
                         scale: 10,
                       ),
-                      shape: RoundedRectangleBorder(
+                      shape: const RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.all(Radius.circular(22.0))),
+                              const BorderRadius.all(Radius.circular(22.0))),
                       elevation: 0,
-                      backgroundColor: Color.fromARGB(255, 222, 242, 71),
+                      backgroundColor: const Color.fromARGB(255, 222, 242, 71),
                       onPressed: () {
                         // data();
                       },
                     ),
                   ))
             ]),
-        backgroundColor: Color.fromARGB(255, 178, 239, 253),
+        backgroundColor: const Color.fromARGB(255, 178, 239, 253),
         body: SafeArea(
           child: Stack(
             children: [
@@ -137,13 +136,13 @@ class _HomeState extends State<Home> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(
+                              const CircleAvatar(
+                                backgroundImage: const NetworkImage(
                                     "https://media.wired.com/photos/592676467034dc5f91beb80e/master/pass/MarkZuckerberg.jpg"),
                               ),
-                              Text(
+                              const Text(
                                 'Home',
-                                style: TextStyle(color: Colors.black),
+                                style: const TextStyle(color: Colors.black),
                               ),
                               CircleAvatar(
                                 backgroundColor: Colors.transparent,
@@ -158,8 +157,8 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         pinned: true,
-                        snap: true,
-                        floating: true,
+                        snap: false,
+                        floating: false,
                         elevation: 0,
                         flexibleSpace: Padding(
                           padding: const EdgeInsets.only(top: 90.0, bottom: 0),
@@ -200,7 +199,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,
                                               children: [
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 30,
                                                 ),
                                                 Image.asset(
@@ -215,9 +214,9 @@ class _HomeState extends State<Home> {
                                                 horizontal: 8.0),
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   "Owe me",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       color: Colors.white),
                                                 ),
                                               ],
@@ -227,9 +226,9 @@ class _HomeState extends State<Home> {
                                             padding: const EdgeInsets.all(8.0),
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   "\$ 12500",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 25),
                                                 ),
@@ -240,9 +239,9 @@ class _HomeState extends State<Home> {
                                             padding: const EdgeInsets.all(8.0),
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   "2 Debts",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       color: Colors.white),
                                                 ),
                                               ],
@@ -286,57 +285,91 @@ class _HomeState extends State<Home> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      const Text(
                                         "My debts",
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 22),
                                       ),
-                                      Text("See All",
+                                      const Text("See All",
                                           style: TextStyle(
-                                              color: Colors.white60,
+                                              color: Color.fromARGB(
+                                                  153, 152, 152, 152),
                                               fontSize: 19))
                                     ],
                                   ),
-                                  SizedBox(height: 15),
+                                  const SizedBox(height: 15),
                                   Expanded(
                                     child: BlocBuilder<UserBlocBloc,
                                         UserBlocState>(
                                       builder: (context, state) {
-                                        return ListView.separated(
-                                            itemBuilder: ((context, index) {
-                                              //print(state.user);
-                                              return ListTile(
-                                                leading: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0), //or 15.0
-                                                  child: Container(
-                                                    height: 45.0,
-                                                    width: 40.0,
-                                                    color: Color(0xffFF0E58),
-                                                    child: Image.network(
-                                                        //fit: BoxFit.fill,
-                                                        state.user[index][1]),
+                                        return state.user == []
+                                            ? const CircularProgressIndicator(
+                                                color: Colors.green,
+                                              )
+                                            : Column(
+                                                children: [
+                                                  Expanded(
+                                                    child: ListView.separated(
+                                                        itemBuilder:
+                                                            ((context, index) {
+                                                          //print(state.user);
+                                                          return ListTile(
+                                                            leading: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0), //or 15.0
+                                                              child: Container(
+                                                                height: 45.0,
+                                                                width: 40.0,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        74,
+                                                                        255,
+                                                                        14,
+                                                                        86),
+                                                                child: Image
+                                                                    .network(
+                                                                  state.user[
+                                                                      index][1],
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            tileColor:
+                                                                Colors.white,
+                                                            trailing: const Text(
+                                                                "\$ 100",
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .green)),
+                                                            title: Text(state
+                                                                    .user[index]
+                                                                [0]),
+                                                            subtitle:
+                                                                const Text(
+                                                              "Untill 20/10/22",
+                                                            ),
+                                                          );
+                                                        }),
+                                                        separatorBuilder:
+                                                            ((context, index) =>
+                                                                const Divider()),
+                                                        itemCount:
+                                                            state.user.length),
+                                                    //state.user.length),
                                                   ),
-                                                ),
-                                                tileColor: Colors.white,
-                                                trailing: Text("\$ 100",
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.green)),
-                                                title:
-                                                    Text(state.user[index][0]),
-                                                subtitle: Text(
-                                                  "Untill 20/10/22",
-                                                ),
+                                                  // state.isEnd
+                                                  //     ? CircularProgressIndicator()
+                                                  //     : Text("end of list")
+                                                ],
                                               );
-                                            }),
-                                            separatorBuilder:
-                                                ((context, index) =>
-                                                    const Divider()),
-                                            itemCount: state.user.length);
                                       },
                                     ),
                                   ),
@@ -346,7 +379,8 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
-                      Opacity(opacity: 1 - _opacity, child: Overlapwidget()),
+                      Opacity(
+                          opacity: 1 - _opacity, child: const Overlapwidget()),
                     ],
                   )),
               // Positioned(
@@ -386,7 +420,7 @@ class Overlapwidget extends StatelessWidget {
                 ),
               ),
             ),
-            Text("NEW")
+            const Text("NEW")
           ],
         ),
         Column(
@@ -403,7 +437,7 @@ class Overlapwidget extends StatelessWidget {
                 ),
               ),
             ),
-            Text("PAY OFF")
+            const Text("PAY OFF")
           ],
         ),
         Column(
@@ -420,7 +454,7 @@ class Overlapwidget extends StatelessWidget {
                 ),
               ),
             ),
-            Text("LEND")
+            const Text("LEND")
           ],
         ),
         Column(
@@ -437,7 +471,7 @@ class Overlapwidget extends StatelessWidget {
                 ),
               ),
             ),
-            Text("MORE")
+            const Text("MORE")
           ],
         )
       ],

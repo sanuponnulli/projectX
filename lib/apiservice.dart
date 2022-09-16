@@ -7,7 +7,7 @@ Future<List<List>> getdata() async {
     final totalpages = response.data["total_pages"];
     List data = response.data["data"];
     List<List> returndata = [];
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < data.length; i++) {
       returndata.add([data[i]["Name"], data[i]["Img"]]);
     }
     // print(returndata);
