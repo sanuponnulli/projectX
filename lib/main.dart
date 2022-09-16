@@ -36,12 +36,36 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final ScrollController _scrollController = ScrollController();
   final ScrollController _scrollController1 = ScrollController();
+  ValueNotifier isbottom = ValueNotifier(0);
+
+  //final ScrollController _scrollController2 = ScrollController();
+
   double _opacity = 0;
+  //bool isbottom = false;
+  List list = [];
   void onListen() {
+    //print(_scrollController.offset);
     setState(() {
       _opacity = 1 / 270 * (_scrollController.offset);
     });
-    //print(_opacity);
+    if (_scrollController.position.atEdge &&
+        _scrollController.position.pixels != 0) {
+      // setState(() {
+      //   isbottom = true;
+      // });
+      isbottom.value = 1;
+      isbottom.notifyListeners();
+      print("reload");
+      list.clear();
+      BlocProvider.of<UserBlocBloc>(context).add(Loadmore());
+    } else {
+      isbottom.value = 0;
+      isbottom.notifyListeners();
+      // setState(() {
+      //   isbottom = false;
+      // });
+    }
+    // //print(_opacity);
   }
 
   void onlisten2() {
@@ -50,12 +74,29 @@ class _HomeState extends State<Home> {
   // void data() async {
   //   getdata();
   // }
+  // void onlisten3() {
+  //   if (_scrollController2.position.atEdge &&
+  //       _scrollController2.position.pixels != 0) {
+  //     print("reload");
+  //     // setState(() {
+  //     //   isbottom = true;
+  //     // });
+  //     BlocProvider.of<UserBlocBloc>(context).add(Loadmore());
+  //   } else {
+  //     // setState(() {
+  //     //   //isbottom = false;
+  //     // });
+  //   }
+
+  //   //print(_scrollController1.position);
+  // }
 
   @override
   void initState() {
     // TODO: implement initState
     _scrollController.addListener(onListen);
     _scrollController1.addListener(onlisten2);
+
     //data();
     super.initState();
   }
@@ -65,14 +106,16 @@ class _HomeState extends State<Home> {
     // TODO: implement dispose
     _scrollController.removeListener(onListen);
     _scrollController1.removeListener(onlisten2);
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      BlocProvider.of<UserBlocBloc>(context).add(Intialize());
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   BlocProvider.of<UserBlocBloc>(context).add(Intialize());
+    // });
+    BlocProvider.of<UserBlocBloc>(context).add(Intialize());
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
@@ -302,74 +345,72 @@ class _HomeState extends State<Home> {
                                     child: BlocBuilder<UserBlocBloc,
                                         UserBlocState>(
                                       builder: (context, state) {
-                                        return state.user == []
-                                            ? const CircularProgressIndicator(
-                                                color: Colors.green,
-                                              )
-                                            : Column(
-                                                children: [
-                                                  Expanded(
-                                                    child: ListView.separated(
-                                                        itemBuilder:
-                                                            ((context, index) {
-                                                          //print(state.user);
-                                                          return ListTile(
-                                                            leading: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8.0), //or 15.0
-                                                              child: Container(
-                                                                height: 45.0,
-                                                                width: 40.0,
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        74,
-                                                                        255,
-                                                                        14,
-                                                                        86),
-                                                                child: Image
-                                                                    .network(
-                                                                  state.user[
-                                                                      index][1],
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                ),
-                                                              ),
+                                        if (state.user == []) {
+                                          return const CircularProgressIndicator(
+                                            color: Colors.green,
+                                          );
+                                        } else {
+                                          list.addAll(state.user);
+                                          return Column(
+                                            children: [
+                                              Expanded(
+                                                child: ListView.separated(
+                                                    itemBuilder:
+                                                        ((context, index) {
+                                                      print(isbottom.value);
+                                                      print(state.isEnd);
+                                                      return ListTile(
+                                                        leading: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                  8.0), //or 15.0
+                                                          child: Container(
+                                                            height: 45.0,
+                                                            width: 40.0,
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    74,
+                                                                    255,
+                                                                    14,
+                                                                    86),
+                                                            child:
+                                                                Image.network(
+                                                              list[index][1],
+                                                              fit: BoxFit.fill,
                                                             ),
-                                                            tileColor:
-                                                                Colors.white,
-                                                            trailing: const Text(
-                                                                "\$ 100",
-                                                                style: const TextStyle(
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .green)),
-                                                            title: Text(state
-                                                                    .user[index]
-                                                                [0]),
-                                                            subtitle:
-                                                                const Text(
-                                                              "Untill 20/10/22",
-                                                            ),
-                                                          );
-                                                        }),
-                                                        separatorBuilder:
-                                                            ((context, index) =>
-                                                                const Divider()),
-                                                        itemCount:
-                                                            state.user.length),
-                                                    //state.user.length),
-                                                  ),
-                                                  // state.isEnd
-                                                  //     ? CircularProgressIndicator()
-                                                  //     : Text("end of list")
-                                                ],
-                                              );
+                                                          ),
+                                                        ),
+                                                        tileColor: Colors.white,
+                                                        trailing: const Text(
+                                                            "\$ 100",
+                                                            style: const TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .green)),
+                                                        title: Text(
+                                                            list[index][0]),
+                                                        subtitle: const Text(
+                                                          "Untill 20/10/22",
+                                                        ),
+                                                      );
+                                                    }),
+                                                    separatorBuilder:
+                                                        ((context, index) =>
+                                                            const Divider()),
+                                                    itemCount: list.length),
+                                              ),
+                                              if (!state.isEnd &&
+                                                  isbottom.value == 1)
+                                                CircularProgressIndicator()
+                                              else if (state.isEnd &&
+                                                  isbottom.value == 0)
+                                                Text("end of list")
+                                            ],
+                                          );
+                                        }
                                       },
                                     ),
                                   ),
