@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
     setState(() {
       _opacity = 1 / 270 * (_scrollController.offset);
     });
-    list.clear();
+//list.clear();
     if (_scrollController.position.atEdge &&
         _scrollController.position.pixels != 0) {
       // setState(() {
