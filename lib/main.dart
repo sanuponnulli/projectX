@@ -48,6 +48,7 @@ class _HomeState extends State<Home> {
     setState(() {
       _opacity = 1 / 270 * (_scrollController.offset);
     });
+    list.clear();
     if (_scrollController.position.atEdge &&
         _scrollController.position.pixels != 0) {
       // setState(() {
@@ -65,31 +66,11 @@ class _HomeState extends State<Home> {
       //   isbottom = false;
       // });
     }
-    // //print(_opacity);
   }
 
   void onlisten2() {
     //print(_scrollController1.position);
   }
-  // void data() async {
-  //   getdata();
-  // }
-  // void onlisten3() {
-  //   if (_scrollController2.position.atEdge &&
-  //       _scrollController2.position.pixels != 0) {
-  //     print("reload");
-  //     // setState(() {
-  //     //   isbottom = true;
-  //     // });
-  //     BlocProvider.of<UserBlocBloc>(context).add(Loadmore());
-  //   } else {
-  //     // setState(() {
-  //     //   //isbottom = false;
-  //     // });
-  //   }
-
-  //   //print(_scrollController1.position);
-  // }
 
   @override
   void initState() {
@@ -112,10 +93,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   BlocProvider.of<UserBlocBloc>(context).add(Intialize());
-    // });
-    BlocProvider.of<UserBlocBloc>(context).add(Intialize());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<UserBlocBloc>(context).add(Intialize());
+    });
+    //BlocProvider.of<UserBlocBloc>(context).add(Intialize());
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
@@ -357,57 +338,68 @@ class _HomeState extends State<Home> {
                                                 child: ListView.separated(
                                                     itemBuilder:
                                                         ((context, index) {
-                                                      print(isbottom.value);
-                                                      print(state.isEnd);
-                                                      return ListTile(
-                                                        leading: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                  8.0), //or 15.0
-                                                          child: Container(
-                                                            height: 45.0,
-                                                            width: 40.0,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    74,
-                                                                    255,
-                                                                    14,
-                                                                    86),
+                                                      // print(isbottom.value);
+                                                      // print(state.isEnd);
+                                                      if (index ==
+                                                              list.length - 1 &&
+                                                          isbottom.value == 1) {
+                                                        return Center(
                                                             child:
-                                                                Image.network(
-                                                              list[index][1],
-                                                              fit: BoxFit.fill,
+                                                                CircularProgressIndicator());
+                                                      } else {
+                                                        return ListTile(
+                                                          leading: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0), //or 15.0
+                                                            child: Container(
+                                                              height: 45.0,
+                                                              width: 40.0,
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      74,
+                                                                      255,
+                                                                      14,
+                                                                      86),
+                                                              child:
+                                                                  Image.network(
+                                                                list[index][1],
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        tileColor: Colors.white,
-                                                        trailing: const Text(
-                                                            "\$ 100",
-                                                            style: const TextStyle(
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Colors
-                                                                    .green)),
-                                                        title: Text(
-                                                            list[index][0]),
-                                                        subtitle: const Text(
-                                                          "Untill 20/10/22",
-                                                        ),
-                                                      );
+                                                          tileColor:
+                                                              Colors.white,
+                                                          trailing: const Text(
+                                                              "\$ 100",
+                                                              style: const TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .green)),
+                                                          title: Text(
+                                                              list[index][0]),
+                                                          subtitle: const Text(
+                                                            "Untill 20/10/22",
+                                                          ),
+                                                        );
+                                                      }
                                                     }),
                                                     separatorBuilder:
                                                         ((context, index) =>
                                                             const Divider()),
                                                     itemCount: list.length),
                                               ),
-                                              if (!state.isEnd &&
-                                                  isbottom.value == 1)
-                                                CircularProgressIndicator()
-                                              else if (state.isEnd &&
-                                                  isbottom.value == 0)
-                                                Text("end of list")
+                                              // if (!state.isEnd &&
+                                              //     isbottom.value == 1)
+                                              //   CircularProgressIndicator()
+                                              // else if (state.isEnd &&
+                                              //     isbottom.value == 0)
+                                              //   Text("end of list")
                                             ],
                                           );
                                         }
